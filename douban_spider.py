@@ -7,6 +7,7 @@
 
 import re
 import urllib2
+import time
 
 
 class DouBanSpider(object):
@@ -67,7 +68,7 @@ class DouBanSpider(object):
         movie_items = re.findall(r'<span.*?class="title">(.*?)</span>', my_page, re.S)
 
         for index, item in enumerate(movie_items):
-            if item.find(" ") == -1:
+            if item.find("&nbsp") == -1:
                 temp_data.append('Top' + str(self._top_num) + ' ' + item)
                 self._top_num += 1
 
@@ -79,7 +80,7 @@ class DouBanSpider(object):
         爬虫入口，并控制爬虫抓取页面的范围
 
         """
-        while self.page <= 4:
+        while self.page <= 10:
             my_page = self.get_page(self.page)
             self.find_title(my_page)
             self.page += 1
@@ -94,6 +95,7 @@ def main():
            Date: 2015-05-21
         ###################################
     """
+    start_time = time.time()
 
     my_spider = DouBanSpider()
     my_spider.start_spider()
@@ -101,7 +103,10 @@ def main():
     for item in my_spider.datas:
         print item
 
+    end_time = time.time()
+
     print '豆瓣爬虫爬取结束'
+    print '总耗时：%d' % (end_time - start_time)
 
 if __name__ == '__main__':
     main()
